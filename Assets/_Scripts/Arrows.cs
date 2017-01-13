@@ -35,7 +35,7 @@ public class Arrows : MonoBehaviour {
     {
         while (true)
         {
-            for (float dist = 1.0f; dist > 0.0; dist += -Time.deltaTime/10)
+            for (float dist = 1.0f; dist > 0.0; dist += -Time.deltaTime/900)
             {
                 earth.transform.position = orbitLine.GetPoint3D01(dist);
                 yield return null;
