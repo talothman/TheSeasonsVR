@@ -4,14 +4,16 @@ using System.Collections;
 public class UIFollow : MonoBehaviour {
     public GameObject objectToFollow;
     public GameObject objectToLookAt;
-	// Use this for initialization
-	void Start () {
-	
-	}
+
+    public Vector3 offset = Vector3.zero;
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = objectToFollow.transform.position;
-        //transform.LookAt(objectToLookAt.transform);
+
+        if (objectToFollow != null)
+            transform.position = objectToFollow.transform.position + offset;
+
+        if (objectToLookAt != null)
+            transform.LookAt(objectToLookAt.transform);
 	}
 }

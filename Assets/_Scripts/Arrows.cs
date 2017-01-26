@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using DG.Tweening;
 using Vectrosity;
 
 public class Arrows : MonoBehaviour {
@@ -14,11 +14,15 @@ public class Arrows : MonoBehaviour {
 	void Start () {
         
         line = VectorLine.SetLine3D(Color.white, transform.position, earth.transform.position);
+        // closeup for earth size
+        //line.SetWidth(0.015f);
         VectorLine.SetCamera3D(GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>());
 
-        orbitLine = new VectorLine("OrbitLine", new List<Vector3> (150), 1.0f, LineType.Continuous);
+        orbitLine = new VectorLine("OrbitLine", new List<Vector3>(365), 1f, LineType.Continuous);
+        // closeup for earth size
+        //orbitLine = new VectorLine("OrbitLine", new List<Vector3> (365), 0.05f, LineType.Continuous);
         orbitLine.material = lineMaterial;
-        orbitLine.MakeEllipse(transform.position + new Vector3(-3, 0, 0), transform.up, 20f, 10f);
+        orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 20f, 10f);
         orbitLine.Draw3DAuto();
 
         StartCoroutine(SpinAroundAxis());
@@ -28,16 +32,16 @@ public class Arrows : MonoBehaviour {
 	void Update () {
         line.points3[0] = transform.position;
         line.points3[1] = earth.transform.position;
-        orbitLine.MakeEllipse(transform.position + new Vector3(-3, 0, 0), transform.up, 20f, 10f);
+        orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 118f, 118f);
     }
 
     IEnumerator SpinAroundAxis()
     {
         while (true)
         {
-            for (float dist = 1.0f; dist > 0.0; dist += -Time.deltaTime/900)
+            for (float dist = 1.0f; dist > 0.0; dist += -Time.deltaTime/100000)
             {
-                earth.transform.position = orbitLine.GetPoint3D01(dist);
+                earth.transform.DOMove(orbitLine.GetPoint3D01(dist), 0.02f, false);
                 yield return null;
             }
         }
