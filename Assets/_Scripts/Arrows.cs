@@ -10,29 +10,42 @@ public class Arrows : MonoBehaviour {
     VectorLine orbitLine;
     public Material lineMaterial;
 
+    public bool centerToCenterLineShow = false;
+    public bool orbitLineShow = true;
 	// Use this for initialization
 	void Start () {
+
+        if (centerToCenterLineShow)
+        {
+            line = VectorLine.SetLine3D(Color.white, transform.position, earth.transform.position);
+            // closeup for earth size
+            //line.SetWidth(0.015f);
+            VectorLine.SetCamera3D(GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>());
+        }
+
+        if (orbitLineShow)
+        {
+            orbitLine = new VectorLine("OrbitLine", new List<Vector3>(365), 1f, LineType.Continuous);
+            // closeup for earth size
+            //orbitLine = new VectorLine("OrbitLine", new List<Vector3> (365), 0.05f, LineType.Continuous);
+            orbitLine.material = lineMaterial;
+            orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 20f, 10f);
+            orbitLine.Draw3DAuto();
+        }
         
-        line = VectorLine.SetLine3D(Color.white, transform.position, earth.transform.position);
-        // closeup for earth size
-        //line.SetWidth(0.015f);
-        VectorLine.SetCamera3D(GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>());
-
-        orbitLine = new VectorLine("OrbitLine", new List<Vector3>(365), 1f, LineType.Continuous);
-        // closeup for earth size
-        //orbitLine = new VectorLine("OrbitLine", new List<Vector3> (365), 0.05f, LineType.Continuous);
-        orbitLine.material = lineMaterial;
-        orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 20f, 10f);
-        orbitLine.Draw3DAuto();
-
         StartCoroutine(SpinAroundAxis());
     }
 	
 	// Update is called once per frame
 	void Update () {
-        line.points3[0] = transform.position;
-        line.points3[1] = earth.transform.position;
-        orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 118f, 118f);
+        if (centerToCenterLineShow)
+        {
+            line.points3[0] = transform.position;
+            line.points3[1] = earth.transform.position;
+        }
+        
+        if(orbitLineShow)
+            orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 118f, 118f);
     }
 
     IEnumerator SpinAroundAxis()

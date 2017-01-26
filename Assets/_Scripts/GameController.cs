@@ -13,11 +13,20 @@ public class GameController : MonoBehaviour {
     public GameObject sun;
 
     private string[] explanationArrayTexts = { "Notice that Earth is a bit tilted.", "You can tell by observing the line through it's axis. It's not straight.", "This is what it would look like if it wasn't tilted.",
-                                                "Let's return the earth to it's original axis tilt, 22.5 degrees.", "Look this way!"};
-	// Use this for initialization
+                                              "Let's return the earth to it's original axis tilt, 22.5 degrees.", "Look this way!"};
+
+    public bool beginGame = false;
+    bool hasBegun = false;
+    // Use this for initialization
 	void Start () {
-        StartCoroutine(pauseEarthUI());
-        StartCoroutine(pauseMoonUI());
+        if (beginGame)
+        {
+            StartCoroutine(pauseEarthUI());
+            StartCoroutine(pauseMoonUI());
+        }
+
+        SteamVR_Fade.Start(Color.black, 0, true);
+        
     }
 	
     IEnumerator pauseEarthUI()
@@ -57,6 +66,10 @@ public class GameController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-	
-	}
+        if (Input.GetKeyDown(KeyCode.S) && !hasBegun)
+        {
+            SteamVR_Fade.Start(Color.clear, 10, true);
+            hasBegun = true;
+        }
+    }
 }

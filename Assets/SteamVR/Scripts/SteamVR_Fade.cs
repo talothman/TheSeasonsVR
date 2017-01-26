@@ -19,6 +19,7 @@
 //			(Does not affect the game view, however.)
 //
 //=============================================================================
+#define TEST_FADE_VIEW
 
 using UnityEngine;
 using Valve.VR;
@@ -43,7 +44,7 @@ public class SteamVR_Fade : MonoBehaviour
 	}
 
 #if TEST_FADE_VIEW
-	void Update()
+    void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
@@ -53,7 +54,7 @@ public class SteamVR_Fade : MonoBehaviour
 	}
 #endif
 
-	public void OnStartFade(Color newColor, float duration, bool fadeOverlay)
+    public void OnStartFade(Color newColor, float duration, bool fadeOverlay)
 	{
 		if (duration > 0.0f)
 		{
