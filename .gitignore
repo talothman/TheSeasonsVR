@@ -1,4 +1,6 @@
-utogenerated VS/MD/Consulo solution and project files
+Library/
+Temp/
+obj/
 ExportedObj/
 .consulo/
 *.csproj
