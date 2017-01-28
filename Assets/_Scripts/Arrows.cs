@@ -12,6 +12,11 @@ public class Arrows : MonoBehaviour {
 
     public bool centerToCenterLineShow = false;
     public bool orbitLineShow = true;
+    public bool earthRevolves = true;
+
+    public float revolveAroundSunSpeed = 100000.0f;
+    public float currentSeasonFloat = 1.0f;
+
 	// Use this for initialization
 	void Start () {
 
@@ -33,7 +38,8 @@ public class Arrows : MonoBehaviour {
             orbitLine.Draw3DAuto();
         }
         
-        StartCoroutine(SpinAroundAxis());
+        if(earthRevolves)
+            StartCoroutine(StartSpinAroundAxis(currentSeasonFloat));
     }
 	
 	// Update is called once per frame
@@ -48,11 +54,13 @@ public class Arrows : MonoBehaviour {
             orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 118f, 118f);
     }
 
-    IEnumerator SpinAroundAxis()
+    public IEnumerator StartSpinAroundAxis(float beginSpot)
     {
+        //earth.transform.DOMove(orbitLine.GetPoint3D01(beginSpot), 0.02f, false);
+
         while (true)
         {
-            for (float dist = 1.0f; dist > 0.0; dist += -Time.deltaTime/100000)
+            for (float dist = beginSpot; dist > 0.0; dist += -Time.deltaTime/revolveAroundSunSpeed)
             {
                 earth.transform.DOMove(orbitLine.GetPoint3D01(dist), 0.02f, false);
                 yield return null;
