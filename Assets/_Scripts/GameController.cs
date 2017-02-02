@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour {
     public GameObject farSunUI;
     public GameObject axisUI;
     public GameObject moonUI;
-    public GameObject explinationUI;
+    public GameObject explinationUI; 
 
     public GameObject earth;
     public GameObject axis;
@@ -31,6 +31,8 @@ public class GameController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        
+
         touchedObjectNames = new List<string>();
         
         // black out headset
@@ -46,8 +48,9 @@ public class GameController : MonoBehaviour {
         axis.GetComponent<VRTK_InteractableObject>().InteractableObjectUntouched += TurnAxisUIOff;
 
         //progressionControllerObject.GetComponentInChildren<VRTK_InteractableObject>().InteractableObjectTouched += ZoomOut;
-        progressionControllerObject.transform.Find("ForwardButton").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += NextSeasion;
-        progressionControllerObject.transform.Find("BackwardButton").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += PreviousSeasion;
+        progressionControllerObject.transform.Find("ForwardButton").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += NextSeason;
+        progressionControllerObject.transform.Find("BackwardButton").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += PreviousSeason;
+        progressionControllerObject.transform.Find("BigPicture").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += ZoomOut;
     }
 	
     void TurnEarthUIOn(object sender, InteractableObjectEventArgs e)
@@ -102,19 +105,52 @@ public class GameController : MonoBehaviour {
 
     void ZoomOut(object sender, InteractableObjectEventArgs e)
     {
+        progressionControllerObject.transform.Find("BigPicture").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed -= ZoomOut;
+        progressionControllerObject.transform.Find("CloseUp").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += ZoomIn;
+
         cameraRig.GetComponent<UIFollow>().enabled = false;
         cameraRig.transform.DOMove(new Vector3(0, 45, -154), 5, false);
 
         farEarthUI.SetActive(true);
         farSunUI.SetActive(true);
-        progressionControllerObject.SetActive(false);
-        
+        progressionControllerObject.transform.Find("CloseUp").gameObject.SetActive(false);
+
+        progressionControllerObject.transform.Find("BigPicture").gameObject.GetComponent<Renderer>().material.DOFade(0f, 1.5f).OnComplete(() =>
+        {
+            progressionControllerObject.transform.Find("BigPicture").gameObject.SetActive(false);
+            progressionControllerObject.transform.Find("CloseUp").gameObject.SetActive(true);
+            progressionControllerObject.transform.Find("CloseUp").gameObject.GetComponent<Renderer>().material.DOFade(255f, 2.5f);
+        });
+
+        //progressionControllerObject.SetActive(false);
+
+
         //VRTK_SDK_Bridge.GetControllerRightHand(true).GetComponent<VRTK_ControllerActions>().ToggleHighlightTouchpad(true, Color.white, 5f);
         // show huge earth UI
         // show time and scale control uis
     }
 
-    void NextSeasion(object sender, InteractableObjectEventArgs e)
+    void ZoomIn(object sender, InteractableObjectEventArgs e)
+    {
+        progressionControllerObject.transform.Find("CloseUp").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed -= ZoomIn;
+        progressionControllerObject.transform.Find("BigPicture").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += ZoomOut;
+
+        cameraRig.transform.DOMove(earth.transform.position, 5f, false).OnComplete(() => {
+            cameraRig.GetComponent<UIFollow>().enabled = true;
+            farEarthUI.SetActive(false);
+            farSunUI.SetActive(false);
+            progressionControllerObject.SetActive(true);
+        });
+
+        progressionControllerObject.transform.Find("CloseUp").gameObject.GetComponent<Renderer>().material.DOFade(0f, 2.5f).OnComplete(() =>
+        {
+            progressionControllerObject.transform.Find("CloseUp").gameObject.SetActive(false);
+            progressionControllerObject.transform.Find("BigPicture").gameObject.SetActive(true);
+            progressionControllerObject.transform.Find("BigPicture").gameObject.GetComponent<Renderer>().material.DOFade(255f, 2.5f);
+        });
+    }
+
+    void NextSeason(object sender, InteractableObjectEventArgs e)
     {
         sun.GetComponent<Arrows>().StopAllCoroutines();
         sun.GetComponent<Arrows>().currentSeasonFloat -= 0.25f;
@@ -130,7 +166,7 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    void PreviousSeasion(object sender, InteractableObjectEventArgs e)
+    void PreviousSeason(object sender, InteractableObjectEventArgs e)
     {
         sun.GetComponent<Arrows>().StopAllCoroutines();
         sun.GetComponent<Arrows>().currentSeasonFloat += 0.25f;
