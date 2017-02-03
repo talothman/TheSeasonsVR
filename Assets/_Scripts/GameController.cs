@@ -13,7 +13,8 @@ public class GameController : MonoBehaviour {
     public GameObject farSunUI;
     public GameObject axisUI;
     public GameObject moonUI;
-    public GameObject explinationUI; 
+    public GameObject explinationUI;
+    public CurrentSeason currentSeasonTextRef;
 
     public GameObject earth;
     public GameObject axis;
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour {
     public GameObject progressionControllerObject;
     public GameObject cameraRig;
 
+    public Transform bigPicturePosition;
     public bool beginGame = false;
     bool hasBegun = false;
     public float textDisplayDelay = 5f;
@@ -109,7 +111,8 @@ public class GameController : MonoBehaviour {
         progressionControllerObject.transform.Find("CloseUp").GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += ZoomIn;
 
         cameraRig.GetComponent<UIFollow>().enabled = false;
-        cameraRig.transform.DOMove(new Vector3(0, 45, -154), 5, false);
+        cameraRig.transform.DOMove(bigPicturePosition.position, 5, false);
+        //cameraRig.transform.DORotate(bigPicturePosition.rotation.eulerAngles, 1, RotateMode.Fast);
 
         farEarthUI.SetActive(true);
         farSunUI.SetActive(true);
@@ -140,7 +143,10 @@ public class GameController : MonoBehaviour {
             farEarthUI.SetActive(false);
             farSunUI.SetActive(false);
             progressionControllerObject.SetActive(true);
+
         });
+
+        //cameraRig.transform.DORotate(Vector3.zero, 0.5f, RotateMode.Fast);
 
         progressionControllerObject.transform.Find("CloseUp").gameObject.GetComponent<Renderer>().material.DOFade(0f, 2.5f).OnComplete(() =>
         {
@@ -155,15 +161,18 @@ public class GameController : MonoBehaviour {
         sun.GetComponent<Arrows>().StopAllCoroutines();
         sun.GetComponent<Arrows>().currentSeasonFloat -= 0.25f;
 
-        if (sun.GetComponent<Arrows>().currentSeasonFloat > 0.0f)
+        if (sun.GetComponent<Arrows>().currentSeasonFloat >= 0.25f)
         {
             sun.GetComponent<Arrows>().StartCoroutine(sun.GetComponent<Arrows>().StartSpinAroundAxis(sun.GetComponent<Arrows>().currentSeasonFloat)); 
         }
         else
         {
-            //progressionControllerObject.transform.Find("BackwardButton").gameObject.SetActive(true);
-            sun.GetComponent<Arrows>().currentSeasonFloat = 1.25f;
+            sun.GetComponent<Arrows>().currentSeasonFloat = 1f;
+            sun.GetComponent<Arrows>().StartCoroutine(sun.GetComponent<Arrows>().StartSpinAroundAxis(sun.GetComponent<Arrows>().currentSeasonFloat));
         }
+
+        currentSeasonTextRef.IncrementeSeason();
+
     }
 
     void PreviousSeason(object sender, InteractableObjectEventArgs e)

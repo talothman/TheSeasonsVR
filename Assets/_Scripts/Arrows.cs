@@ -51,7 +51,7 @@ public class Arrows : MonoBehaviour {
         }
         
         if(orbitLineShow)
-            orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 118f, 118f);
+            orbitLine.MakeEllipse(transform.position + new Vector3(0, 0, 0), transform.up, 200f, 200f);
     }
 
     public IEnumerator StartSpinAroundAxis(float beginSpot)
