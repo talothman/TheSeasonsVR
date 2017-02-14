@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class ParticleCollisionResponse : MonoBehaviour {
     
     public ParticleSystem particleSystem;
